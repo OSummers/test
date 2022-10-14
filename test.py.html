@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>test.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+test.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">bs4 </span><span class="s0">import </span><span class="s1">BeautifulSoup</span>
+<span class="s0">import </span><span class="s1">requests</span>
+
+<span class="s1">source = requests.get(</span><span class="s2">'https://coreyms.com'</span><span class="s1">).text</span>
+
+<span class="s1">soup = BeautifulSoup(source</span><span class="s0">, </span><span class="s2">'lxml'</span><span class="s1">)</span>
+
+<span class="s1">csv_file = open(</span><span class="s2">'cms_scrape.csv'</span><span class="s0">, </span><span class="s2">'w'</span><span class="s1">)</span>
+
+<span class="s1">csv_writer = csv.writer(csv_file)</span>
+<span class="s1">csv_writer.writerow([</span><span class="s2">'headline'</span><span class="s0">, </span><span class="s2">'summary'</span><span class="s0">, </span><span class="s2">'video_link'</span><span class="s1">])</span>
+
+<span class="s0">for </span><span class="s1">article </span><span class="s0">in </span><span class="s1">soup.find_all(</span><span class="s2">'article'</span><span class="s1">):</span>
+    <span class="s1">headline = article.h2.a.text</span>
+    <span class="s1">print(headline)</span>
+
+    <span class="s1">summary = article.find(</span><span class="s2">'div'</span><span class="s0">, </span><span class="s1">class_=</span><span class="s2">'entry-content'</span><span class="s1">).p.text</span>
+    <span class="s1">print(summary)</span>
+
+    <span class="s1">vid_src = article.find(</span><span class="s2">'iframe'</span><span class="s0">, </span><span class="s1">class_ = </span><span class="s2">'youtube-player'</span><span class="s1">)[</span><span class="s2">'src'</span><span class="s1">]</span>
+
+    <span class="s1">vid_id = vid_src.split(</span><span class="s2">'/'</span><span class="s1">)[</span><span class="s3">4</span><span class="s1">]</span>
+    <span class="s1">vid_id = vid_id.split(</span><span class="s2">'?'</span><span class="s1">)[</span><span class="s3">0</span><span class="s1">]</span>
+
+    <span class="s1">yt_link = </span><span class="s2">f'https://youtube.com/watch?v=</span><span class="s0">{</span><span class="s1">vid_id</span><span class="s0">}</span><span class="s2">'</span>
+
+    <span class="s1">print(yt_link)</span>
+
+    <span class="s1">print()</span>
+
+    <span class="s1">csv_writer.writerow([headline</span><span class="s0">, </span><span class="s1">summary</span><span class="s0">, </span><span class="s1">yt_link])</span>
+
+    <span class="s1">csv_file.close()</span></pre>
+</body>
+</html>
